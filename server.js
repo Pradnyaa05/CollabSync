@@ -21,18 +21,38 @@ app.get('/:room', (req, res) => {
     res.render('room', { roomId: req.params.room });
 });
 
+let tasks = [];
+
 io.on('connection', socket => {
     socket.on('join-room', (roomId, userId) => {
         socket.join(roomId);
         socket.to(roomId).emit('user-connected', userId);
-        socket.broadcast.to(roomId).emit('user-connected', userId);
+        socket.emit('update-tasks', tasks);
+        
         socket.on('message', (message) => {
             io.to(roomId).emit('createMessage', message)
         }); 
+        
+        socket.on('file-message', file => {
+            io.to(roomId).emit('fileMessage', file);
+        });
+
+        socket.on('new-task', taskText => {
+            const task = { text: taskText, completed: false };
+            tasks.push(task);
+            io.to(roomId).emit('add-task', taskText);
+            io.to(roomId).emit('update-tasks', tasks);
+        });
+
+        socket.on('delete-task', taskText => {
+            tasks = tasks.filter(task => task.text !== taskText);
+            io.to(roomId).emit('update-tasks', tasks);
+        });
+
         socket.on('disconnect', () => {
             socket.to(roomId).emit('user-disconnected', userId);
         });
     });
 });
 
-server.listen(process.env.PORT||3030)
+server.listen(process.env.PORT || 3030);
