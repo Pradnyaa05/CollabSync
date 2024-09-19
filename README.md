@@ -32,12 +32,12 @@ To run this project locally, follow these steps:
 
 1. **Clone the Repository**:
    ```bash
-   git clone https://github.com/Pradnyaa05/CollabSync
+   git clone https://github.com/Pradnyaa05/CollabSync-PARSUNETHON-Hackathon
    ```
 
 2. **Navigate to the Project Directory**:
    ```bash
-   cd CollabSync
+   cd CollabSync-PARSUNETHON-Hackathon
    ```
 
 3. **Install Dependencies**:
